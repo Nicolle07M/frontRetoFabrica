@@ -14,13 +14,31 @@ html, body {
 }
 
 .navbar {
-background: #004494;
+  background-color: #0056b3; /* Color azul oscuro */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
 .nav-logo {
-  color: white;
-  font-weight: bold;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-button {
+  display: block; /* Ajusta el tamaño del logotipo según tus necesidades */
+}
+
+.logo-image {
+  height: 75px;
+  margin-left: 25px;
 }
 
 .nav-list {
@@ -28,7 +46,7 @@ background: #004494;
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 20px; /* Espacio entre los elementos */
+  margin-right: 20px ;
 }
 
 .nav-item {
@@ -65,4 +83,3 @@ background: #004494;
   left: 0;
   box-sizing: border-box; /* Incluye padding en el ancho total */
 }
-
