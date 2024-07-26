@@ -39,7 +39,6 @@ const ShowUsers = () => {
                 </ul>
             </nav>
       <div className='d-grind gap-2'>
-        <Link to="/Create" className='btn btn-primary btn-lg mt-2 mb-2 text-white'>Crear</Link>
         <div className='container'>
         <table className='table table-striped'>
             <thead className='bg-primary text-white'>
@@ -50,7 +49,9 @@ const ShowUsers = () => {
                     <th>Direccion</th>
                     <th>Telefono</th>
                     <th>Correo</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
+
                 </tr>
 
             </thead>
@@ -63,6 +64,8 @@ const ShowUsers = () => {
                     <td>{user.address}</td>
                     <td>{user.phone}</td>
                     <td>{user.email}</td>
+                    <td>{user.status}</td>
+
                     <td>
                         <Link to={`/edit/${user.id}`} className='btn btn-warning'>Editar</Link>
                         <button onClick={ () => deleteUsers(user.id) } className='btn btn-danger'>Eliminar</button>
