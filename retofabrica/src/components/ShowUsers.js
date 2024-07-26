@@ -39,7 +39,8 @@ const ShowUsers = () => {
                 </ul>
             </nav>
       <div className='d-grind gap-2'>
-        <Link to="/Create" className='btn btn-success btn-lg mt-2 mb-2 text-white'>Crear</Link>
+        <Link to="/Create" className='btn btn-primary btn-lg mt-2 mb-2 text-white'>Crear</Link>
+        <div className='container'>
         <table className='table table-striped'>
             <thead className='bg-primary text-white'>
                 <tr>
@@ -75,6 +76,7 @@ const ShowUsers = () => {
 
         </table>
        
+      </div>
       </div>
       <footer className="footer">
                     <p>&copy; 2024 Nick Enterprise. Todos los derechos reservados.</p>
