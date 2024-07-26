@@ -1,0 +1,75 @@
+/* Contenedor de la tabla */
+.table-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #000000; /* Fondo suave */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #007bff; /* Azul para el encabezado */
+}
+
+.table thead th {
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fila alternado */
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Color de fondo en hover */
+}
+
+.table td, .table th {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Botones de acción */
+.btn-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-edit {
+    background-color: #ffc107; /* Amarillo para el botón de editar */
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800; /* Amarillo oscuro para hover */
+}
+
+.btn-delete {
+    background-color: #dc3545; /* Rojo para el botón de eliminar */
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Rojo oscuro para hover */
+}
