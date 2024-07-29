@@ -1,4 +1,4 @@
-/* stylesShowUsers.css */
+/* stylesEditUser.css */
 
 /* Estilo para la barra de navegación */
 .navbar {
@@ -31,52 +31,47 @@
     font-weight: bold;
 }
 
-/* Estilo para la tabla */
-.container {
+/* Estilo para el formulario */
+form {
+    max-width: 600px;
     margin: 20px auto;
-    max-width: 1200px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+form div {
+    margin-bottom: 15px;
 }
 
-thead {
-    background-color: #0056b3;
-    color: white;
-}
-
-thead th {
-    padding: 10px;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tbody td {
-    padding: 10px;
-    text-align: center;
-}
-
-tbody td a {
-    margin-right: 10px;
-    color: #003366;
-    text-decoration: none;
+form label {
+    display: block;
+    margin-bottom: 5px;
     font-weight: bold;
 }
 
-tbody td button {
-    background-color: #cc0000;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+form input[type="text"],
+form input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-tbody td button:hover {
-    background-color: #ff0000;
+form button[type="submit"] {
+    background-color: #003366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #005bb5;
 }
 
 /* Estilo para el pie de página */

@@ -1,34 +1,30 @@
-import React, {useEffect, useState}from 'react'
-import axios from 'axios'
-import {Link} from 'react-router-dom'
-import logo from '../logo.png'; 
-
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import logo from '../logo.png';
+import './stylesShowUsers.css'; // Importar el archivo de estilos
 
 const ShowUsers = () => {
+    const endpoint = 'http://localhost:3005';
+    const [users, setUsers] = useState([]);
 
-    const endpoint = 'http://localhost:3005'
-    const [users, setUsers] = useState([]) 
-
-    useEffect ( () => {
-        getAllUsers()
-    }, [])
+    useEffect(() => {
+        getAllUsers();
+    }, []);
 
     const getAllUsers = async () => {
-        const response = await axios.get(`${endpoint}/users`)
-        setUsers(response.data)
-
-    }
+        const response = await axios.get(`${endpoint}/users`);
+        setUsers(response.data);
+    };
 
     const deleteUsers = async (id) => {
-       await axios.delete(`${endpoint}/users/${id}`)
-       getAllUsers()
+        await axios.delete(`${endpoint}/users/${id}`);
+        getAllUsers();
+    };
 
-    }
-
-  return (
-    <div>
-        <nav className="navbar">
+    return (
+        <div>
+            <nav className="navbar">
                 <div className="nav-logo">
                     <a href="/" className="logo-button">
                         <img src={logo} alt="Logo" className="logo-image" />
@@ -38,54 +34,44 @@ const ShowUsers = () => {
                     <li className="nav-item"><a href="/Login">Crear compañia</a></li>
                 </ul>
             </nav>
-      <div className='d-grind gap-2'>
-        <div className='container'>
-        <table className='table table-striped'>
-            <thead className='bg-primary text-white'>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Direccion</th>
-                    <th>Telefono</th>
-                    <th>Correo</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+            <div className='container'>
+                <table className=''>
+                    <thead className=''>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) =>
+                            <tr key={user.idUser}>
+                                <td>{user.idUser}</td>
+                                <td>{user.name}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.address}</td>
+                                <td>{user.phone}</td>
+                                <td>{user.email}</td>
+                                <td>{user.status}</td>
+                                <td>
+                                    <Link to={`/edit/${user.idUser}`} className='btn btn-warning'>Editar</Link>
+                                    <button onClick={() => deleteUsers(user.idUser)} className='btn btn-danger'>Eliminar</button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            <footer className="footer">
+                <p>&copy; 2024 Nick Enterprise. Todos los derechos reservados.</p>
+            </footer>
+        </div>
+    );
+};
 
-                </tr>
-
-            </thead>
-            <tbody>
-                { users.map( (user) =>
-                <tr key ={user.idUser}>
-                     <td>{user.idUser}</td>
-                    <td>{user.name}</td>
-                    <td>{user.lastName}</td>
-                    <td>{user.address}</td>
-                    <td>{user.phone}</td>
-                    <td>{user.email}</td>
-                    <td>{user.status}</td>
-
-                    <td>
-                        <Link to={`/edit/${user.id}`} className='btn btn-warning'>Editar</Link>
-                        <button onClick={ () => deleteUsers(user.id) } className='btn btn-danger'>Eliminar</button>
-                    </td>
-
-                </tr>
-                
-                
-                )}
-            </tbody>
-
-        </table>
-       
-      </div>
-      </div>
-      <footer className="footer">
-                    <p>&copy; 2024 Nick Enterprise. Todos los derechos reservados.</p>
-                </footer>
-    </div>
-  )
-}
-
-export default ShowUsers
+export default ShowUsers;

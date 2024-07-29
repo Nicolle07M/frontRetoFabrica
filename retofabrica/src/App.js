@@ -5,6 +5,7 @@ import Welcome from './components/welcomePage';
 import Register from './components/registerPage';
 import Login from './components/loginPage';
 import ShowUsers from './components/ShowUsers';
+import EditUser from './components/editUsersPage';
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Users" element={<ShowUsers />} />
-        <Route path='/edit/:id' element={<editUsers />} />
+        <Route path='/edit/:id' element={<EditUser />} />
         
       </Routes> 
       </BrowserRouter>
