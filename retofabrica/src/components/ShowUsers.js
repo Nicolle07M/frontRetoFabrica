@@ -57,7 +57,7 @@ const ShowUsers = () => {
                                 <td>{user.address}</td>
                                 <td>{user.phone}</td>
                                 <td>{user.email}</td>
-                                <td>{user.status}</td>
+                                <td>{user.status !== undefined ? (user.status ? 'Activo' : 'Inactivo') : 'No disponible'}</td>
                                 <td>
                                     <Link to={`/edit/${user.idUser}`} className='btn btn-warning'>Editar</Link>
                                     <button onClick={() => deleteUsers(user.idUser)} className='btn btn-danger'>Eliminar</button>
