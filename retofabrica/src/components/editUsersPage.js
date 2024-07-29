@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import logo from '../logo.png';
-import './stylesEditUser.css'; // Importar el archivo de estilos
+import './stylesEditUser.css';
 
 const endpoint = "http://localhost:3005/users/";
 
@@ -12,32 +12,42 @@ const EditUser = () => {
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState(''); 
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
 
     const update = async (e) => {
         e.preventDefault();
-        await axios.put(`${endpoint}${id}`, {
-            name: name, 
-            lastName: lastName,
-            address: address,
-            phone: phone,
-            email: email,
-            status: status
-        });
-        navigate('/');
+        try {
+            await axios.put(`${endpoint}${id}`, {
+                name: name,
+                lastName: lastName,
+                address: address,
+                phone: phone,
+                email: email,
+                status: status === 'Activo' 
+            });
+            navigate('/Users');
+        } catch (error) {
+            console.error('Error updating user:', error);
+
+        }
     };
+    
 
     useEffect(() => {
         const getUserById = async () => {
-            const response = await axios.get(`${endpoint}${id}`);
-            setName(response.data.name);
-            setLastName(response.data.lastName);
-            setAddress(response.data.address);
-            setPhone(response.data.phone);
-            setEmail(response.data.email);
-            setStatus(response.data.status);
+            try {
+                const response = await axios.get(`${endpoint}${id}`);
+                setName(response.data.name);
+                setLastName(response.data.lastName);
+                setAddress(response.data.address);
+                setPhone(response.data.phone);
+                setEmail(response.data.email);
+                setStatus(response.data.status ? 'Activo' : 'Inactivo'); // Ajusta el estado según sea necesario
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
         };
         getUserById();
     }, [id]);
@@ -57,51 +67,54 @@ const EditUser = () => {
             <form onSubmit={update}>
                 <div>
                     <label>Nombre:</label>
-                    <input 
-                        type="text" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </div>
                 <div>
                     <label>Apellido:</label>
-                    <input 
-                        type="text" 
-                        value={lastName} 
-                        onChange={(e) => setLastName(e.target.value)} 
+                    <input
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                     />
                 </div>
                 <div>
                     <label>Direccion:</label>
-                    <input 
-                        type="text" 
-                        value={address} 
-                        onChange={(e) => setAddress(e.target.value)} 
+                    <input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label>Telefono</label>
-                    <input 
-                        type="text" 
-                        value={phone} 
-                        onChange={(e) => setPhone(e.target.value)} 
+                    <label>Telefono:</label>
+                    <input
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
                     />
                 </div>
                 <div>
                     <label>Correo electronico:</label>
-                    <input 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div>
                     <label>Status:</label>
-                    <input 
-                        type="text" 
-                        value={status} 
-                        onChange={(e) => setStatus(e.target.value)} 
-                    />
+                    <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                    >
+                        <option value="">Seleccione un estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
                 </div>
                 <button type="submit">Actualizar!</button>
             </form>
