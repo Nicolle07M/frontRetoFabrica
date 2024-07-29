@@ -45,6 +45,7 @@ const ShowUsers = () => {
                             <th>Telefono</th>
                             <th>Correo</th>
                             <th>Estado</th>
+                            <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -58,6 +59,7 @@ const ShowUsers = () => {
                                 <td>{user.phone}</td>
                                 <td>{user.email}</td>
                                 <td>{user.status !== undefined ? (user.status ? 'Activo' : 'Inactivo') : 'No disponible'}</td>
+                                <td>{user.rol_id}</td>
                                 <td>
                                     <Link to={`/edit/${user.idUser}`} className='btn btn-warning'>Editar</Link>
                                     <button onClick={() => deleteUsers(user.idUser)} className='btn btn-danger'>Eliminar</button>
