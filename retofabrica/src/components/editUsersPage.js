@@ -5,7 +5,7 @@ import logo from '../logo.png';
 import './stylesEditUser.css';
 
 const endpoint = "http://localhost:3005/users/";
-const rolesEndpoint = "http://localhost:3005/roles/";
+
 
 const EditUser = () => {
     const [name, setName] = useState('');
@@ -14,8 +14,6 @@ const EditUser = () => {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('');
-    const [roles, setRoles] = useState([]); // Lista de roles
-    const [selectedRole, setSelectedRole] = useState(''); // Rol seleccionado
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -29,24 +27,15 @@ const EditUser = () => {
                 setPhone(response.data.phone);
                 setEmail(response.data.email);
                 setStatus(response.data.status ? 'Activo' : 'Inactivo');
-                setSelectedRole(response.data.id_Rol); // Establecer el rol seleccionado
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
         };
 
-        const getRoles = async () => {
-            try {
-                const response = await axios.get(rolesEndpoint);
-                console.log('Roles fetched:', response.data); // Verifica la respuesta de roles
-                setRoles(response.data);
-            } catch (error) {
-                console.error('Error fetching roles:', error);
-            }
-        };
+        
 
         getUserById();
-        getRoles();
+
     }, [id]);
 
     const update = async (e) => {
@@ -58,7 +47,7 @@ const EditUser = () => {
             phone,
             email,
             status: status === 'Activo',
-            id_Rol: selectedRole, // Pasar el rol seleccionado
+          
         };
 
         console.log('Sending user data:', userData);
@@ -134,20 +123,7 @@ const EditUser = () => {
                         <option value="Inactivo">Inactivo</option>
                     </select>
                 </div>
-                <div>
-                    <label>Rol:</label>
-                    <select
-                        value={selectedRole}
-                        onChange={(e) => setSelectedRole(e.target.value)}
-                    >
-                        <option value="">Seleccione un rol</option>
-                        {roles.map((rol) => (
-                            <option key={rol.id_Rol} value={rol.id_Rol}>
-                                {rol.rolType}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+
                 <button type="submit">Actualizar</button>
             </form>
             <footer className="footer">
