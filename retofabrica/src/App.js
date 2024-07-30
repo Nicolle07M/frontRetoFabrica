@@ -6,6 +6,7 @@ import Register from './components/registerPage';
 import Login from './components/loginPage';
 import ShowUsers from './components/ShowUsers';
 import EditUser from './components/editUsersPage';
+import AssignTask from './components/assignTaskPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Users" element={<ShowUsers />} />
         <Route path='/edit/:id' element={<EditUser />} />
+        <Route path='/AssignTask' element={<AssignTask/>} />
         
       </Routes> 
       </BrowserRouter>

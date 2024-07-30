@@ -47,7 +47,7 @@ const Login = () => {
             </nav>
             <div className="container">
                 <main className="main-content">
-                    <h1>Iniciar sesión</h1>
+                    <h1 className='title'>Iniciar sesión</h1>
                     <form className="login-form" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="email">Correo electrónico:</label>

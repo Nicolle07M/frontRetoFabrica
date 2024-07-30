@@ -58,7 +58,7 @@ const Register = () => {
             </nav>
             <div className="container">
                 <main className="main-content">
-                    <h1>Registro</h1>
+                    <h1 className='title'>Registrate Aqui!</h1>
                     <form className="register-form" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="name">Nombre:</label>

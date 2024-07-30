@@ -14,7 +14,7 @@ html, body {
   }
   
   .navbar {
-    background-color: #0056b3; /* Color azul oscuro */
+    background-color: #0056b3; 
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -24,7 +24,7 @@ html, body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+    box-sizing: border-box; 
   }
   
   .nav-logo {
@@ -45,7 +45,7 @@ html, body {
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 20px; /* Espacio entre los elementos */
+    gap: 20px; 
   }
   
   .nav-item {
@@ -61,7 +61,7 @@ html, body {
   }
   
   .nav-item a:hover {
-    background-color: #004494; /* Color azul más oscuro para el hover */
+    background-color: #004494; 
   }
   
   .main-content {
@@ -72,15 +72,15 @@ html, body {
   }
   
   .footer {
-    background-color: #0056b3; /* Color azul oscuro */
+    background-color: #0056b3; 
     color: white;
     text-align: center;
-    padding: 10px 20px; /* Ajusta el padding para que coincida con el navbar */
+    padding: 10px 20px; 
     width: 100%;
     position: fixed;
     bottom: 0;
     left: 0;
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    box-sizing: border-box; 
   }
   
   .register-form {
@@ -90,6 +90,7 @@ html, body {
     background-color: #f4f4f4;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
   }
   
   .form-group {

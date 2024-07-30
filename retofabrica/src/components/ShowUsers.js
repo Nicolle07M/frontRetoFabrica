@@ -65,6 +65,7 @@ const ShowUsers = () => {
                         className="search-input"
                     />
                 </div>
+                <h1 className='title'>Usuarios del sistema</h1>
                 <table className=''>
                     <thead className=''>
                         <tr>
