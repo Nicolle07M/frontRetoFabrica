@@ -13,13 +13,25 @@ const ShowUsers = () => {
     }, []);
 
     const getAllUsers = async () => {
-        const response = await axios.get(`${endpoint}/users`);
-        setUsers(response.data);
+        try {
+            const response = await axios.get(`${endpoint}/users`);
+            setUsers(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
     };
 
     const deleteUsers = async (id) => {
-        await axios.delete(`${endpoint}/users/${id}`);
-        getAllUsers();
+        // Mostrar alerta de confirmación antes de eliminar
+        const isConfirmed = window.confirm("¿Estás seguro de que quieres eliminar este usuario?");
+        if (isConfirmed) {
+            try {
+                await axios.delete(`${endpoint}/users/${id}`);
+                getAllUsers();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
+        }
     };
 
     return (
