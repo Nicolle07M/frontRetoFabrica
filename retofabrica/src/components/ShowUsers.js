@@ -7,6 +7,7 @@ import './stylesShowUsers.css'; // Importar el archivo de estilos
 const ShowUsers = () => {
     const endpoint = 'http://localhost:3005';
     const [users, setUsers] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         getAllUsers();
@@ -34,6 +35,14 @@ const ShowUsers = () => {
         }
     };
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredUsers = users.filter(user => 
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div>
             <nav className="navbar">
@@ -47,6 +56,13 @@ const ShowUsers = () => {
                 </ul>
             </nav>
             <div className='container'>
+                <input
+                    type="text"
+                    placeholder="Buscar por nombre"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="search-input"
+                />
                 <table className=''>
                     <thead className=''>
                         <tr>
@@ -62,7 +78,7 @@ const ShowUsers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) =>
+                        {filteredUsers.map((user) =>
                             <tr key={user.idUser}>
                                 <td>{user.idUser}</td>
                                 <td>{user.name}</td>
@@ -71,7 +87,7 @@ const ShowUsers = () => {
                                 <td>{user.phone}</td>
                                 <td>{user.email}</td>
                                 <td>{user.status !== undefined ? (user.status ? 'Activo' : 'Inactivo') : 'No disponible'}</td>
-                                <td>{user.rol ? user.rol.rolType : 'No disponible'}</td> {/* Usa rolType aquí */}
+                                <td>{user.rol ? user.rol.rolType : 'No disponible'}</td>
                                 <td>
                                     <Link to={`/edit/${user.idUser}`} className='btn btn-warning'>Editar</Link>
                                     <button onClick={() => deleteUsers(user.idUser)} className='btn btn-danger'>Eliminar</button>
