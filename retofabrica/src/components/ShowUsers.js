@@ -23,7 +23,6 @@ const ShowUsers = () => {
     };
 
     const deleteUsers = async (id) => {
-        // Mostrar alerta de confirmación antes de eliminar
         const isConfirmed = window.confirm("¿Estás seguro de que quieres eliminar este usuario?");
         if (isConfirmed) {
             try {
@@ -40,7 +39,8 @@ const ShowUsers = () => {
     };
 
     const filteredUsers = users.filter(user => 
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.phone && user.phone.toString().toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return (
@@ -58,7 +58,7 @@ const ShowUsers = () => {
             <div className='container'>
                 <input
                     type="text"
-                    placeholder="Buscar por nombre"
+                    placeholder="Buscar por nombre o teléfono"
                     value={searchTerm}
                     onChange={handleSearchChange}
                     className="search-input"
