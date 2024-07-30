@@ -56,13 +56,15 @@ const ShowUsers = () => {
                 </ul>
             </nav>
             <div className='container'>
-                <input
-                    type="text"
-                    placeholder="Buscar por nombre o teléfono"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="search-input"
-                />
+                <div className="search-input-container">
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre o teléfono"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="search-input"
+                    />
+                </div>
                 <table className=''>
                     <thead className=''>
                         <tr>
