@@ -52,7 +52,7 @@ const AssignTask = () => {
             <div>
                 <label>Empleado:</label>
                 <select onChange={(e) => setSelectedEmployee(e.target.value)} value={selectedEmployee}>
-                    <option value="">Select an employee</option>
+                    <option value="">Selecciona Empleado</option>
                     {employees.map(emp => (
                         <option key={emp.id} value={emp.id}>{emp.name}</option>
                     ))}
