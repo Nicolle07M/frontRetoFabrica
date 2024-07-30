@@ -6,7 +6,6 @@ import './stylesEditUser.css';
 
 const endpoint = "http://localhost:3005/users/";
 
-
 const EditUser = () => {
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -14,6 +13,8 @@ const EditUser = () => {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('');
+    const [role, setRole] = useState(''); // Estado para el id del rol
+    const [roles, setRoles] = useState([]); // Estado para los roles disponibles
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -27,14 +28,24 @@ const EditUser = () => {
                 setPhone(response.data.phone);
                 setEmail(response.data.email);
                 setStatus(response.data.status ? 'Activo' : 'Inactivo');
+                setRole(response.data.rol ? response.data.rol.idRol : ''); // Asume que el rol viene como objeto con idRol
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
         };
 
-        
+        const getRoles = async () => {
+            try {
+                // Asegúrate de tener un endpoint para obtener los roles
+                const response = await axios.get("http://localhost:3005/roles");
+                setRoles(response.data); // Ajusta según la estructura de tu respuesta
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        };
 
         getUserById();
+        getRoles();
 
     }, [id]);
 
@@ -47,7 +58,7 @@ const EditUser = () => {
             phone,
             email,
             status: status === 'Activo',
-          
+            rol: { idRol: role } // Envía el id del rol
         };
 
         console.log('Sending user data:', userData);
@@ -55,7 +66,7 @@ const EditUser = () => {
             await axios.put(`${endpoint}${id}`, userData);
             navigate('/Users');
         } catch (error) {
-            console.error('Error updating user:', error);
+            console.error('Error updating user:', error.response?.data || error.message);
         }
     };
 
@@ -123,7 +134,18 @@ const EditUser = () => {
                         <option value="Inactivo">Inactivo</option>
                     </select>
                 </div>
-
+                <div>
+                    <label>Rol:</label>
+                    <select
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        <option value="">Seleccione un rol</option>
+                        {roles.map((r) => (
+                            <option key={r.idRol} value={r.idRol}>{r.rolType}</option>
+                        ))}
+                    </select>
+                </div>
                 <button type="submit">Actualizar</button>
             </form>
             <footer className="footer">
