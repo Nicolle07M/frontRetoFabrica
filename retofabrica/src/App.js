@@ -7,6 +7,7 @@ import Login from './components/loginPage';
 import ShowUsers from './components/ShowUsers';
 import EditUser from './components/editUsersPage';
 import AssignTask from './components/assignTaskPage';
+import PanelTask from './components/panelTask';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/Users" element={<ShowUsers />} />
         <Route path='/edit/:id' element={<EditUser />} />
         <Route path='/AssignTask' element={<AssignTask/>} />
+        <Route path='/PanelTask' element={<PanelTask/>} />
         
       </Routes> 
       </BrowserRouter>
