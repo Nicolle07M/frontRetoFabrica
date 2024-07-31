@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../logo.png';
 import './stylesShowUsers.css'; 
-
+import { Link } from 'react-router-dom';
 const endpoint = 'http://localhost:3005';
 
 const PanelTask = () => {
@@ -20,6 +20,18 @@ const PanelTask = () => {
       console.error('Error fetching tasks:', error);
     }
   };
+
+  const deleteTask = async (id) => {
+    const isConfirmed = window.confirm("¿Estás seguro de que quieres eliminar esta tarea?");
+        if (isConfirmed) {
+            try {
+                await axios.delete(`${endpoint}/tasks/${id}`);
+                fetchTasks();
+            } catch (error) {
+                console.error('Error deleting task:', error);
+            }
+        }
+  }
 
   return (
     <div>
@@ -57,8 +69,8 @@ const PanelTask = () => {
                 <td>{task.status}</td>
                 <td>{task.user ? `${task.user.name} ${task.user.lastName}` : 'N/A'}</td>
                 <td>
-                  <button className='btn btn-warning'>Editar</button>
-                  <button className='btn btn-danger'>Eliminar</button>
+                  <Link to={`/editTask/${task.idTask}`} className='btn btn-warning'>Editar</Link>
+                  <button onClick={() => deleteTask(task.idTask)} className='btn btn-danger'>Eliminar</button>
                 </td>
               </tr>
             ))}

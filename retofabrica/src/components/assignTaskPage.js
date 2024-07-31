@@ -1,8 +1,9 @@
-// src/components/AssignTask.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../logo.png';
 import './styleAssignTask.css';
+
+const endpoint = 'http://localhost:3005'; // Asegúrate de que el endpoint esté correcto
 
 const AssignTask = () => {
     const [users, setUsers] = useState([]);
@@ -13,13 +14,12 @@ const AssignTask = () => {
 
     useEffect(() => {
         // Fetch employees with role ID 3
-        axios.get('/users')
+        axios.get(`${endpoint}/users/employees?roleId=3`)
             .then(response => {
                 setUsers(response.data);
             })
             .catch(error => console.error('Error fetching employees:', error));
     }, []);
-    
 
     const handleAssignTask = () => {
         const task = {
@@ -28,8 +28,8 @@ const AssignTask = () => {
             dueDate: dueDate,
             user: { idUser: selectedEmployee }  // Asegúrate de que este campo coincida con la entidad en el backend
         };
-
-        axios.post('/tasks', task)
+    
+        axios.post(`${endpoint}/tasks`, task)
             .then(response => {
                 alert('Task assigned successfully!');
                 setSelectedEmployee('');
@@ -42,7 +42,7 @@ const AssignTask = () => {
                 alert('Error assigning task.');
             });
     };
-
+    
     return (
         <div>
             <nav className="navbar">
