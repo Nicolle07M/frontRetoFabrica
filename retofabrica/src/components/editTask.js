@@ -1,136 +1,149 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import './stylesRegister.css'; 
 import logo from '../logo.png';
-import './styleAssignTask.css';
 
-const endpoint = 'http://localhost:3005/'; // Asegúrate de que el endpoint esté correcto
+const endpoint = 'http://localhost:3005';
 
 const EditTask = () => {
-    const { taskId } = useParams();
+  const [task, setTask] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [status, setStatus] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    const [users, setUsers] = useState([]);
-    const [task, setTask] = useState({
-        title: '',
-        description: '',
-        dueDate: '',
-        user: { idUser: '' }
-    });
-    const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchTask();
+    fetchUsers(); // Cargar usuarios al montar el componente
+  }, []);
 
-    useEffect(() => {
-        // Fetch users with role ID 3
-        axios.get(`${endpoint}/users/employees`)
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(error => console.error('Error fetching employees:', error));
+  const fetchTask = async () => {
+    try {
+      const response = await axios.get(`${endpoint}/tasks/${id}`);
+      const taskData = response.data;
+      setTask(taskData);
+      setTitle(taskData.title);
+      setDescription(taskData.description);
+      setDueDate(taskData.dueDate);
+      setStatus(taskData.status);
+      setSelectedUser(taskData.user ? taskData.user.idUser : ''); // Asignar el usuario actual
+    } catch (error) {
+      console.error('Error fetching task:', error);
+    }
+  };
 
-        // Fetch the task details
-        axios.get(`${endpoint}/tasks/${taskId}`)
-            .then(response => {
-                setTask({
-                    title: response.data.title,
-                    description: response.data.description,
-                    dueDate: response.data.dueDate,
-                    user: response.data.user
-                });
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching task:', error);
-                setLoading(false);
-            });
-    }, [taskId]);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${endpoint}/users/employees?roleId=3`); // Obtener empleados
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
 
-    const handleUpdateTask = () => {
-        axios.put(`${endpoint}/tasks/${taskId}`, task)
-            .then(response => {
-                alert('Task updated successfully!');
-                // Optionally, you can redirect or perform other actions
-            })
-            .catch(error => {
-                console.error('Error updating task:', error);
-                alert('Error updating task.');
-            });
-    };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await axios.put(`${endpoint}/tasks/${id}`, {
+        title,
+        description,
+        dueDate,
+        status,
+        user: { idUser: selectedUser } // Incluir el usuario seleccionado
+      });
+      navigate('/PanelTask');
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setTask(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+  if (!task) return <p>Loading...</p>;
 
-    return (
-        <div>
-            <nav className="navbar">
-                <div className="nav-logo">
-                    <a href="/" className="logo-button">
-                        <img src={logo} alt="Logo" className="logo-image" />
-                    </a>
-                </div>
-                <ul className="nav-list">
-                    <li className="nav-item"><a href="/PanelTask">Regresar</a></li>
-                </ul>
-            </nav>
-            <div className="assign-task-container">
-                <h2>Editar tarea</h2>
-                {loading ? (
-                    <p>Cargando...</p>
-                ) : (
-                    <>
-                        <div>
-                            <label>Empleado:</label>
-                            <select
-                                name="user.idUser"
-                                onChange={handleChange}
-                                value={task.user.idUser}
-                            >
-                                <option value="">Seleccionar empleado</option>
-                                {users.map(user => (
-                                    <option key={user.idUser} value={user.idUser}>
-                                        {user.name} {user.lastName}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label>Título de la tarea:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                onChange={handleChange}
-                                value={task.title}
-                            />
-                        </div>
-                        <div>
-                            <label>Descripción de la tarea:</label>
-                            <textarea
-                                name="description"
-                                onChange={handleChange}
-                                value={task.description}
-                            />
-                        </div>
-                        <div>
-                            <label>Fecha:</label>
-                            <input
-                                type="date"
-                                name="dueDate"
-                                onChange={handleChange}
-                                value={task.dueDate}
-                            />
-                        </div>
-                        <button onClick={handleUpdateTask}>Actualizar tarea</button>
-                    </>
-                )}
-            </div>
-            <footer className="footer">
-                <p>&copy; 2024 Nick Enterprise. Todos los derechos reservados.</p>
-            </footer>
+  return (
+    <div>
+      <nav className="navbar">
+        <div className="nav-logo">
+          <a href="/" className="logo-button">
+            <img src={logo} alt="Logo" className="logo-image" />
+          </a>
         </div>
-    );
+        <ul className="nav-list">
+          <li className="nav-item"><a href="/PanelTask">Regresar</a></li>
+        </ul>
+      </nav>
+      <div className='container'>
+        <h1 className='title'>Editar Tarea</h1>
+        <form onSubmit={handleSubmit}>
+          <div className='form-group'>
+            <label htmlFor='title'>Título</label>
+            <input
+              type='text'
+              id='title'
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor='description'>Descripción</label>
+            <textarea
+              id='description'
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor='dueDate'>Fecha de Vencimiento</label>
+            <input
+              type='date'
+              id='dueDate'
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor='status'>Estado</label>
+            <select
+              id='status'
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              required
+            >
+              <option value='Pendiente'>Pendiente</option>
+              <option value='Completado'>Completado</option>
+            </select>
+          </div>
+          <div className='form-group'>
+            <label htmlFor='user'>Empleado</label>
+            <select
+              id='user'
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
+              required
+            >
+              <option value=''>Seleccionar empleado</option>
+              {users.map(user => (
+                <option key={user.idUser} value={user.idUser}>
+                  {user.name} {user.lastName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type='submit' className='btn btn-primary'>Actualizar</button>
+        </form>
+        <footer className="footer">
+          <p>&copy; 2024 Nick Enterprise. Todos los derechos reservados.</p>
+        </footer>
+      </div>
+    </div>
+  );
 };
 
 export default EditTask;

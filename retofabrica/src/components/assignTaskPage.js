@@ -11,6 +11,7 @@ const AssignTask = () => {
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState('');
+    const [status, setStatus] = useState('Pendiente'); // Estado para el status
 
     useEffect(() => {
         // Fetch employees with role ID 3
@@ -26,6 +27,7 @@ const AssignTask = () => {
             title: taskTitle,
             description: taskDescription,
             dueDate: dueDate,
+            status: status, // Agregar el status
             user: { idUser: selectedEmployee }  // Asegúrate de que este campo coincida con la entidad en el backend
         };
     
@@ -36,6 +38,7 @@ const AssignTask = () => {
                 setTaskTitle('');
                 setTaskDescription('');
                 setDueDate('');
+                setStatus('Pendiente'); // Restablecer el estado del status
             })
             .catch(error => {
                 console.error('Error assigning task:', error);
@@ -79,6 +82,13 @@ const AssignTask = () => {
                 <div>
                     <label>Fecha:</label>
                     <input type="date" onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
+                </div>
+                <div>
+                    <label>Status:</label>
+                    <select onChange={(e) => setStatus(e.target.value)} value={status}>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Completado">Completado</option>
+                    </select>
                 </div>
                 <button onClick={handleAssignTask}>Asignar tarea</button>
             </div>
