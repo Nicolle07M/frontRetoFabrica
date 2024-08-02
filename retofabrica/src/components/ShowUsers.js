@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import logo from '../logo.png';
-import { getAllUsers, deleteUserById } from '../services/userService';
-import './stylesShowUsers.css';
+import './stylesShowUsers.css'; // Importar el archivo de estilos
 
 const ShowUsers = () => {
+    const endpoint = 'http://localhost:3005';
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        getUsers();
+        getAllUsers();
     }, []);
 
-    const getUsers = async () => {
+    const getAllUsers = async () => {
         try {
-            const usersData = await getAllUsers();
-            setUsers(usersData);
+            const response = await axios.get(`${endpoint}/users`);
+            setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
         }
     };
 
-    const handleDeleteUser = async (id) => {
+    const deleteUsers = async (id) => {
         const isConfirmed = window.confirm("¿Estás seguro de que quieres eliminar este usuario?");
         if (isConfirmed) {
             try {
-                await deleteUserById(id);
-                getUsers();
+                await axios.delete(`${endpoint}/users/${id}`);
+                getAllUsers();
             } catch (error) {
                 console.error('Error deleting user:', error);
             }
@@ -92,7 +93,7 @@ const ShowUsers = () => {
                                 <td>{user.rol ? user.rol.rolType : 'No disponible'}</td>
                                 <td>
                                     <Link to={`/edit/${user.idUser}`} className='btn btn-warning'>Editar</Link>
-                                    <button onClick={() => handleDeleteUser(user.idUser)} className='btn btn-danger'>Eliminar</button>
+                                    <button onClick={() => deleteUsers(user.idUser)} className='btn btn-danger'>Eliminar</button>
                                 </td>
                             </tr>
                         )}
