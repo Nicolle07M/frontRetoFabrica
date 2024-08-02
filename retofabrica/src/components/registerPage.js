@@ -1,49 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import './stylesRegister.css'; 
 import logo from '../logo.png'; 
 
-const endpoint = 'http://localhost:3005'
+const endpoint = 'http://localhost:3005';
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        lastName: '',
-        address: '',
-        phone: '',
-        email: '',
-        password: ''
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        // Validación para permitir solo números en el campo phone
-        if (name === 'phone' && !/^\d*$/.test(value)) {
-            return;
-        }
-
-        // Validación para permitir solo letras en los campos name y lastName
-        if ((name === 'name' || name === 'lastName') && !/^[a-zA-Z\s]*$/.test(value)) {
-            return;
-        }
-
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const onSubmit = async (data) => {
         // Validación de la contraseña
-        const password = formData.password;
         const passwordErrors = [];
-        if (password.length < 8) {
+        if (data.password.length < 8) {
             passwordErrors.push("La contraseña debe tener al menos 8 caracteres.");
         }
-        if (!/\d/.test(password)) {
+        if (!/\d/.test(data.password)) {
             passwordErrors.push("La contraseña debe contener al menos un número.");
         }
-        if (!/[!@#$%^&*]/.test(password)) {
+        if (!/[!@#$%^&*/?¿]/.test(data.password)) {
             passwordErrors.push("La contraseña debe contener al menos un carácter especial.");
         }
         if (passwordErrors.length > 0) {
@@ -52,17 +27,10 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post(`${endpoint}/users`, formData);
+            const response = await axios.post(`${endpoint}/users`, data);
             if (response.status === 200) {
                 alert('Registro exitoso');
-                setFormData({
-                    name: '',
-                    lastName: '',
-                    address: '',
-                    phone: '',
-                    email: '',
-                    password: ''
-                });
+                window.location.reload();
             } else {
                 alert('Error al registrar el usuario');
             }
@@ -88,30 +56,40 @@ const Register = () => {
             <div className="container">
                 <main className="main-content">
                     <h1 className='title'>Registrate Aqui!</h1>
-                    <form className="register-form" onSubmit={handleSubmit}>
+                    <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
                             <label htmlFor="name">Nombre:</label>
-                            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+                            <input type="text" id="name" {...register('name', { required: true, pattern: /^[a-zA-Z\s]*$/ })} />
+                            {errors.name && <span className="error">Nombre es requerido y debe contener solo letras</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="lastName">Apellido:</label>
-                            <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
+                            <input type="text" id="lastName" {...register('lastName', { required: true, pattern: /^[a-zA-Z\s]*$/ })} />
+                            {errors.lastName && <span className="error">Apellido es requerido y debe contener solo letras</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="address">Dirección:</label>
-                            <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} required />
+                            <input type="text" id="address" {...register('address', { required: true })} />
+                            {errors.address && <span className="error">Dirección es requerida</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="phone">Teléfono:</label>
-                            <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} required />
+                            <input type="text" id="phone" {...register('phone', { 
+                                required: true, 
+                                pattern: /^\d{10}$/, 
+                                message: "Teléfono debe contener exactamente 10 números" 
+                            })} />
+                            {errors.phone && <span className="error">{errors.phone.message || "Teléfono es requerido y debe contener exactamente 10 números"}</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Correo electrónico:</label>
-                            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+                            <input type="email" id="email" {...register('email', { required: true })} />
+                            {errors.email && <span className="error">Correo electrónico es requerido</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Contraseña:</label>
-                            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+                            <input type="password" id="password" {...register('password', { required: true })} />
+                            {errors.password && <span className="error">Contraseña es requerida</span>}
                         </div>
                         <button type="submit" className="register-button">Registrarse</button>
                     </form>

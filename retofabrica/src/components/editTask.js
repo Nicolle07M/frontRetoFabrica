@@ -1,37 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import './stylesRegister.css'; 
 import logo from '../logo.png';
 
 const endpoint = 'http://localhost:3005';
 
 const EditTask = () => {
-  const [task, setTask] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [status, setStatus] = useState('');
-  const [selectedUser, setSelectedUser] = useState('');
-  const navigate = useNavigate();
   const { id } = useParams();
-
+  const navigate = useNavigate();
+  const { register, handleSubmit, setValue } = useForm();
+  const [users, setUsers] = useState([]);
+  
   useEffect(() => {
     fetchTask();
-    fetchUsers(); // Cargar usuarios al montar el componente
+    fetchUsers();
   }, []);
 
   const fetchTask = async () => {
     try {
       const response = await axios.get(`${endpoint}/tasks/${id}`);
       const taskData = response.data;
-      setTask(taskData);
-      setTitle(taskData.title);
-      setDescription(taskData.description);
-      setDueDate(taskData.dueDate);
-      setStatus(taskData.status);
-      setSelectedUser(taskData.user ? taskData.user.idUser : ''); // Asignar el usuario actual
+      // Establecer valores en el formulario
+      setValue('title', taskData.title);
+      setValue('description', taskData.description);
+      setValue('dueDate', taskData.dueDate);
+      setValue('status', taskData.status);
+      setValue('user', taskData.user ? taskData.user.idUser : '');
     } catch (error) {
       console.error('Error fetching task:', error);
     }
@@ -39,30 +35,27 @@ const EditTask = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${endpoint}/users/employees?roleId=3`); // Obtener empleados
+      const response = await axios.get(`${endpoint}/users/employees?roleId=3`);
       setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const onSubmit = async (data) => {
     try {
       await axios.put(`${endpoint}/tasks/${id}`, {
-        title,
-        description,
-        dueDate,
-        status,
-        user: { idUser: selectedUser } // Incluir el usuario seleccionado
+        title: data.title,
+        description: data.description,
+        dueDate: data.dueDate,
+        status: data.status,
+        user: { idUser: data.user }
       });
       navigate('/PanelTask');
     } catch (error) {
       console.error('Error updating task:', error);
     }
   };
-
-  if (!task) return <p>Loading...</p>;
 
   return (
     <div>
@@ -78,24 +71,20 @@ const EditTask = () => {
       </nav>
       <div className='container'>
         <h1 className='title'>Editar Tarea</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='form-group'>
             <label htmlFor='title'>Título</label>
             <input
               type='text'
               id='title'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
+              {...register('title', { required: true })}
             />
           </div>
           <div className='form-group'>
             <label htmlFor='description'>Descripción</label>
             <textarea
               id='description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
+              {...register('description', { required: true })}
             />
           </div>
           <div className='form-group'>
@@ -103,18 +92,14 @@ const EditTask = () => {
             <input
               type='date'
               id='dueDate'
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              required
+              {...register('dueDate', { required: true })}
             />
           </div>
           <div className='form-group'>
             <label htmlFor='status'>Estado</label>
             <select
               id='status'
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              required
+              {...register('status', { required: true })}
             >
               <option value='Pendiente'>Pendiente</option>
               <option value='Completado'>Completado</option>
@@ -124,9 +109,7 @@ const EditTask = () => {
             <label htmlFor='user'>Empleado</label>
             <select
               id='user'
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              required
+              {...register('user', { required: true })}
             >
               <option value=''>Seleccionar empleado</option>
               {users.map(user => (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import logo from '../logo.png';
 import './stylesEditUser.css';
@@ -7,14 +8,8 @@ import './stylesEditUser.css';
 const endpoint = "http://localhost:3005/users/";
 
 const EditUser = () => {
-    const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [address, setAddress] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('');
-    const [role, setRole] = useState(''); // Estado para el id del rol
-    const [roles, setRoles] = useState([]); // Estado para los roles disponibles
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const [roles, setRoles] = useState([]); 
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -22,13 +17,15 @@ const EditUser = () => {
         const getUserById = async () => {
             try {
                 const response = await axios.get(`${endpoint}${id}`);
-                setName(response.data.name);
-                setLastName(response.data.lastName);
-                setAddress(response.data.address);
-                setPhone(response.data.phone);
-                setEmail(response.data.email);
-                setStatus(response.data.status ? 'Activo' : 'Inactivo');
-                setRole(response.data.rol ? response.data.rol.idRol : ''); // Asume que el rol viene como objeto con idRol
+                const user = response.data;
+                // Asignar valores a los campos del formulario
+                setValue('name', user.name);
+                setValue('lastName', user.lastName);
+                setValue('address', user.address);
+                setValue('phone', user.phone);
+                setValue('email', user.email);
+                setValue('status', user.status ? 'Activo' : 'Inactivo');
+                setValue('role', user.rol ? user.rol.idRol : ''); 
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -36,9 +33,8 @@ const EditUser = () => {
 
         const getRoles = async () => {
             try {
-                // Asegúrate de tener un endpoint para obtener los roles
                 const response = await axios.get("http://localhost:3005/roles");
-                setRoles(response.data); // Ajusta según la estructura de tu respuesta
+                setRoles(response.data); 
             } catch (error) {
                 console.error('Error fetching roles:', error);
             }
@@ -47,18 +43,17 @@ const EditUser = () => {
         getUserById();
         getRoles();
 
-    }, [id]);
+    }, [id, setValue]);
 
-    const update = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         const userData = {
-            name,
-            lastName,
-            address,
-            phone,
-            email,
-            status: status === 'Activo',
-            rol: { idRol: role } 
+            name: data.name,
+            lastName: data.lastName,
+            address: data.address,
+            phone: data.phone,
+            email: data.email,
+            status: data.status === 'Activo',
+            rol: { idRol: data.role } 
         };
 
         console.log('Sending user data:', userData);
@@ -67,13 +62,6 @@ const EditUser = () => {
             navigate('/Users');
         } catch (error) {
             console.error('Error updating user:', error.response?.data || error.message);
-        }
-    };
-
-    const handlePhoneChange = (e) => {
-        const { value } = e.target;
-        if (/^\d*$/.test(value)) {
-            setPhone(value);
         }
     };
 
@@ -89,69 +77,75 @@ const EditUser = () => {
                     <li className="nav-item"><a href="/Users">Regresar</a></li>
                 </ul>
             </nav>
-            <form onSubmit={update}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label>Nombre:</label>
                     <input
                         type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        {...register('name', { required: 'Nombre es requerido' })}
                     />
+                    {errors.name && <span className="error">{errors.name.message}</span>}
                 </div>
                 <div>
                     <label>Apellido:</label>
                     <input
                         type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        {...register('lastName', { required: 'Apellido es requerido' })}
                     />
+                    {errors.lastName && <span className="error">{errors.lastName.message}</span>}
                 </div>
                 <div>
                     <label>Dirección:</label>
                     <input
                         type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        {...register('address', { required: 'Dirección es requerida' })}
                     />
+                    {errors.address && <span className="error">{errors.address.message}</span>}
                 </div>
                 <div>
                     <label>Teléfono:</label>
                     <input
                         type="text"
-                        value={phone}
-                        onChange={handlePhoneChange}
+                        {...register('phone', { 
+                            required: 'Teléfono es requerido',
+                            pattern: {
+                                value: /^\d{10}$/,
+                                message: 'Teléfono debe contener exactamente 10 números'
+                            }
+                        })}
                     />
+                    {errors.phone && <span className="error">{errors.phone.message}</span>}
                 </div>
                 <div>
                     <label>Correo electrónico:</label>
                     <input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        {...register('email', { required: 'Correo electrónico es requerido' })}
                     />
+                    {errors.email && <span className="error">{errors.email.message}</span>}
                 </div>
                 <div>
                     <label>Status:</label>
                     <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
+                        {...register('status', { required: 'Estado es requerido' })}
                     >
                         <option value="">Seleccione un estado</option>
                         <option value="Activo">Activo</option>
                         <option value="Inactivo">Inactivo</option>
                     </select>
+                    {errors.status && <span className="error">{errors.status.message}</span>}
                 </div>
                 <div>
                     <label>Rol:</label>
                     <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
+                        {...register('role', { required: 'Rol es requerido' })}
                     >
                         <option value="">Seleccione un rol</option>
                         {roles.map((r) => (
                             <option key={r.idRol} value={r.idRol}>{r.rolType}</option>
                         ))}
                     </select>
+                    {errors.role && <span className="error">{errors.role.message}</span>}
                 </div>
                 <button type="submit">Actualizar</button>
             </form>
