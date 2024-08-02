@@ -58,7 +58,7 @@ const EditUser = () => {
             phone,
             email,
             status: status === 'Activo',
-            rol: { idRol: role } // Envía el id del rol
+            rol: { idRol: role } 
         };
 
         console.log('Sending user data:', userData);
@@ -67,6 +67,13 @@ const EditUser = () => {
             navigate('/Users');
         } catch (error) {
             console.error('Error updating user:', error.response?.data || error.message);
+        }
+    };
+
+    const handlePhoneChange = (e) => {
+        const { value } = e.target;
+        if (/^\d*$/.test(value)) {
+            setPhone(value);
         }
     };
 
@@ -112,7 +119,7 @@ const EditUser = () => {
                     <input
                         type="text"
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
+                        onChange={handlePhoneChange}
                     />
                 </div>
                 <div>

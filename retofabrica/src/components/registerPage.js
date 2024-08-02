@@ -17,13 +17,42 @@ const Register = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        // Validación para permitir solo números en el campo phone
+        if (name === 'phone' && !/^\d*$/.test(value)) {
+            return;
+        }
+
+        // Validación para permitir solo letras en los campos name y lastName
+        if ((name === 'name' || name === 'lastName') && !/^[a-zA-Z\s]*$/.test(value)) {
+            return;
+        }
+
         setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validación de la contraseña
+        const password = formData.password;
+        const passwordErrors = [];
+        if (password.length < 8) {
+            passwordErrors.push("La contraseña debe tener al menos 8 caracteres.");
+        }
+        if (!/\d/.test(password)) {
+            passwordErrors.push("La contraseña debe contener al menos un número.");
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+            passwordErrors.push("La contraseña debe contener al menos un carácter especial.");
+        }
+        if (passwordErrors.length > 0) {
+            alert(passwordErrors.join('\n'));
+            return;
+        }
+
         try {
-            const response = await axios.post(`${endpoint}/users`, formData); // Actualiza la URL aquí
+            const response = await axios.post(`${endpoint}/users`, formData);
             if (response.status === 200) {
                 alert('Registro exitoso');
                 setFormData({
