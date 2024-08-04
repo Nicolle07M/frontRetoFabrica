@@ -14,7 +14,7 @@ const PanelTask = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${endpoint}/tasks`); // Usar comillas invertidas para la interpolación
+      const response = await axios.get(`${endpoint}/tasks`); 
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);

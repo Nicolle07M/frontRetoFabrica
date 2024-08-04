@@ -30,12 +30,12 @@ const AssignTask = () => {
     
         axios.post(`${endpoint}/tasks`, task)
             .then(response => {
-                alert('Task assigned successfully!');
+                alert('Tarea asignada correctamente!');
                 reset(); // Reset the form after successful submission
             })
             .catch(error => {
-                console.error('Error assigning task:', error);
-                alert('Error assigning task.');
+                console.error('Error en asignar tarea:', error);
+                alert('Error para asignar tarea.');
             });
     };
 
